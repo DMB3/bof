@@ -280,7 +280,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 11443422, guid: 14e787b2a42fb1747b4a24d6573fd054, type: 2}
+    - target: {fileID: 0}
       propertyPath: maxImpulse
       value: 10
       objectReference: {fileID: 0}
@@ -968,6 +968,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1914909672}
   - 114: {fileID: 1914909673}
+  - 114: {fileID: 1914909674}
   m_Layer: 0
   m_Name: Arena
   m_TagString: Untagged
@@ -1000,7 +1001,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1914909671}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7dd058f7caef23408dd0778b2547b19, type: 3}
+  m_Script: {fileID: 11500000, guid: 83367ea6874c6c1459c9d3609343156a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1914909674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1914909671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231c8d3f12890bf4e9bc360b90f4427b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1948297229
