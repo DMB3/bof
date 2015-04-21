@@ -73,6 +73,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToTarget: 1
+  gradient:
+    key0:
+      serializedVersion: 2
+      rgba: 4294945630
+    key1:
+      serializedVersion: 2
+      rgba: 4281794304
+    key2:
+      serializedVersion: 2
+      rgba: 65521
+    key3:
+      serializedVersion: 2
+      rgba: 43511
+    key4:
+      serializedVersion: 2
+      rgba: 255
+    key5:
+      serializedVersion: 2
+      rgba: 0
+    key6:
+      serializedVersion: 2
+      rgba: 0
+    key7:
+      serializedVersion: 2
+      rgba: 0
+    ctime0: 0
+    ctime1: 19853
+    ctime2: 38165
+    ctime3: 52043
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -7,6 +7,7 @@ namespace Ballz.Behaviours {
     public class PointBehaviour : MonoBehaviour {
 
         public float timeToTarget = 1;
+        public Gradient gradient;
         private float startTime;
         internal BallInput parent;
 
@@ -20,12 +21,9 @@ namespace Ballz.Behaviours {
             var distance = this.parent.direction.magnitude;
             this.transform.localPosition = new Vector3(0, 0, progress * distance);
 
-            var magnitude = this.parent.direction.magnitude / this.parent.maxImpulse;
-            if (magnitude <= 0.5) {
-                GetComponent<Renderer>().material.color = Color.Lerp(Color.green, Color.yellow, magnitude);
-            } else {
-                GetComponent<Renderer>().material.color = Color.Lerp(Color.yellow, Color.red, magnitude);
-            }
+            // set color according to impulse given
+            var power = this.parent.direction.magnitude / this.parent.maxImpulse;
+            this.GetComponent<Renderer>().material.color = this.gradient.Evaluate(power);
 
             if (progress == 1) {
                 GameObject.Destroy(this.gameObject);
