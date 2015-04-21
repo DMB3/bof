@@ -56,6 +56,8 @@ namespace Ballz.Behaviours {
 
         public void OnMouseUp() {
             // store impulse in ball
+            Vector3 force = new Vector3(this.direction.x, 0.0f, this.direction.y);
+            this.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
         }
  
     }
