@@ -2,8 +2,10 @@
 using System.Collections;
 
 
-namespace Ballz{
+namespace Ballz.Behaviours {
+
     public class AllSleeping : MonoBehaviour {
+
         public delegate void AllSleepingCallback();
         public event AllSleepingCallback OnAllSleeping;
 
@@ -33,7 +35,9 @@ namespace Ballz{
         }
 
         private void IsAllzSleepingz() {
-            AllSleeping.print("PUTAAAAAA!");
+            //AllSleeping.print("PUTAAAAAA!");
         }
+
     }
+
 }

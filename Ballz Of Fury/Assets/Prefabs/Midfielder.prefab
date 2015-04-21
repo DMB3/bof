@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   point: {fileID: 166134, guid: d73d03ee593b5eb4f8fd7b3e03ac6420, type: 2}
-  maxImpulse: 3.20000005
+  maxImpulse: 10
 --- !u!135 &13565444
 SphereCollider:
   m_ObjectHideFlags: 1
