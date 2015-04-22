@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ballz.Arenas {
+namespace Ballz.Serialization {
     
     /// <summary>
     /// Serializable info about an obstacle.
@@ -36,7 +36,17 @@ namespace Ballz.Arenas {
             set;
         }
 
-        public String PhysicsMaterial {
+        public PhysicMaterial PhysicsMaterial {
+            get;
+            set;
+        }
+
+        public String RendererMaterialName {
+            get;
+            set;
+        }
+
+        public int Layer {
             get;
             set;
         }

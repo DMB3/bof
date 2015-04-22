@@ -4,13 +4,16 @@ using System.Collections;
 
 namespace Ballz.Behaviours {
 
+    /// <summary>
+    /// Class with MonoBehaviour to check if all balls in the arena are currently at rest.
+    /// </summary>
     public class AllSleeping : MonoBehaviour {
 
         public delegate void AllSleepingCallback();
         public event AllSleepingCallback OnAllSleeping;
 
         void Start() {
-            this.OnAllSleeping += this.IsAllzSleepingz;
+            this.OnAllSleeping += this.IsAllSleeping;
             this.StartCheck();
         }
 
@@ -34,7 +37,7 @@ namespace Ballz.Behaviours {
             this.OnAllSleeping();
         }
 
-        private void IsAllzSleepingz() {
+        private void IsAllSleeping() {
             //AllSleeping.print("PUTAAAAAA!");
         }
 

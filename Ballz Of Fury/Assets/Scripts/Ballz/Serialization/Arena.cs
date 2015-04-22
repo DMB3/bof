@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ballz.Arenas {
+namespace Ballz.Serialization {
 
     /// <summary>
     /// Serializable class that defines the layout of an arena.

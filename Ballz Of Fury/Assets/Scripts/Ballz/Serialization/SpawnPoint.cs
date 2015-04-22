@@ -4,18 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ballz.Arenas {
+namespace Ballz.Serialization {
 
     /// <summary>
     /// Serializable info about a spawn point for a ball.
     /// </summary>
     public class SpawnPoint {
-
-        public enum BallType {
-            Defender,
-            Midfielder,
-            Attacker
-        }
 
         public Vector3 Position {
             get;
@@ -32,7 +26,7 @@ namespace Ballz.Arenas {
             set;
         }
 
-        public BallType Ball {
+        public Ballz.Behaviours.SpawnPointBehaviour.BallType Ball {
             get;
             set;
         }
