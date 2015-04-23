@@ -24,6 +24,8 @@ namespace Ballz.Behaviours {
         public GameObject MidfielderPrefab;
         public GameObject AttackerPrefab;
 
+        public Gradient PlayerColours;
+
         public void Spawn() {
             GameObject obj;
 
@@ -43,8 +45,10 @@ namespace Ballz.Behaviours {
 
             obj.transform.position = this.transform.position;
             obj.transform.rotation = this.transform.rotation;
+            obj.transform.parent = this.transform.parent;
 
             obj.GetComponent<BallInput>().PlayerID = this.PlayerID;
+            obj.GetComponent<MeshRenderer>().material.color = this.PlayerColours.Evaluate(this.PlayerID / 10.0f);
         }
 
     }

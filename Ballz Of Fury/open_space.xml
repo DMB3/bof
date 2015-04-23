@@ -7,7 +7,7 @@
       <Shape>Cube</Shape>
       <Position>
         <x>-19.594635</x>
-        <y>-1.769589</y>
+        <y>0</y>
         <z>-13.15008</z>
       </Position>
       <Rotation>
@@ -48,14 +48,14 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
       <Position>
         <x>-2.594634</x>
-        <y>-1.769589</y>
+        <y>0</y>
         <z>-13.15008</z>
       </Position>
       <Rotation>
@@ -96,14 +96,14 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
       <Position>
         <x>-2.59463215</x>
-        <y>-1.769589</y>
+        <y>0</y>
         <z>17.84992</z>
       </Position>
       <Rotation>
@@ -144,14 +144,14 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
       <Position>
         <x>-19.5946331</x>
-        <y>-1.769589</y>
+        <y>0</y>
         <z>17.8499241</z>
       </Position>
       <Rotation>
@@ -192,14 +192,14 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
       <Position>
         <x>-11.0946341</x>
-        <y>-2.769589</y>
+        <y>-1</y>
         <z>2.349922</z>
       </Position>
       <Rotation>
@@ -240,14 +240,14 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>8</Layer>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
       <Position>
         <x>-26.594635</x>
-        <y>-1.769589</y>
+        <y>0</y>
         <z>2.349922</z>
       </Position>
       <Rotation>
@@ -288,14 +288,14 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
       <Position>
         <x>4.405367</x>
-        <y>-1.769589</y>
+        <y>0</y>
         <z>2.349922</z>
       </Position>
       <Rotation>
@@ -336,7 +336,7 @@
           <z>0</z>
         </frictionDirection>
       </PhysicsMaterial>
-      <RendererMaterialName>Wooden floor 01</RendererMaterialName>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
     </Obstacle>
   </Obstacles>
@@ -506,7 +506,7 @@
     <Goal>
       <Position>
         <x>-11.0946331</x>
-        <y>-1.519589</y>
+        <y>0.24999997</y>
         <z>-12.7500782</z>
       </Position>
       <Rotation>
@@ -530,7 +530,7 @@
     <Goal>
       <Position>
         <x>-11.0946341</x>
-        <y>-1.519589</y>
+        <y>0.24999997</y>
         <z>17.44992</z>
       </Position>
       <Rotation>

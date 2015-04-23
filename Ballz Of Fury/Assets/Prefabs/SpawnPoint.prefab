@@ -44,6 +44,49 @@ MonoBehaviour:
   DefenderPrefab: {fileID: 185398, guid: 37801553cbee10a49b85b978d3985f82, type: 2}
   MidfielderPrefab: {fileID: 185398, guid: 14e787b2a42fb1747b4a24d6573fd054, type: 2}
   AttackerPrefab: {fileID: 185398, guid: 710b0b87954ad214c8e324d673428e05, type: 2}
+  PlayerColours:
+    key0:
+      serializedVersion: 2
+      rgba: 4294901760
+    key1:
+      serializedVersion: 2
+      rgba: 4278190335
+    key2:
+      serializedVersion: 2
+      rgba: 65280
+    key3:
+      serializedVersion: 2
+      rgba: 65535
+    key4:
+      serializedVersion: 2
+      rgba: 0
+    key5:
+      serializedVersion: 2
+      rgba: 16777215
+    key6:
+      serializedVersion: 2
+      rgba: 33279
+    key7:
+      serializedVersion: 2
+      rgba: 16774144
+    ctime0: 0
+    ctime1: 6554
+    ctime2: 13107
+    ctime3: 19661
+    ctime4: 26214
+    ctime5: 32768
+    ctime6: 39321
+    ctime7: 45875
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_NumColorKeys: 8
+    m_NumAlphaKeys: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
