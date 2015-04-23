@@ -12,12 +12,7 @@ namespace Ballz.Behaviours {
         public delegate void AllSleepingCallback();
         public event AllSleepingCallback OnAllSleeping;
 
-        void Start() {
-            this.OnAllSleeping += this.IsAllSleeping;
-            this.StartCheck();
-        }
-
-        void StartCheck() {
+        public void StartCheck() {
             this.StartCoroutine(this.Check());
         }
 
@@ -35,10 +30,6 @@ namespace Ballz.Behaviours {
                 }
             }
             this.OnAllSleeping();
-        }
-
-        private void IsAllSleeping() {
-            //AllSleeping.print("PUTAAAAAA!");
         }
 
     }

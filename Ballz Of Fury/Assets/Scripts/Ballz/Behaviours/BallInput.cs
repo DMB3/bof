@@ -18,8 +18,22 @@ namespace Ballz.Behaviours {
     
         private GameObject arrow = null;
         private Coroutine pointGen = null;
+
+        public void ClearInputArrow() {
+            if (this.arrow != null) {
+                GameObject.Destroy(this.arrow);
+                this.arrow = null;
+            }
+
+            this.AppliedImpulse = Vector3.zero;
+        }
     
         public void OnMouseDown() {
+            if (!this.enabled) {
+                // unfortunately, disabled objects still callback on OnMouse* :(
+                return;
+            }
+
             if (this.arrow == null) {
                 this.arrow = new GameObject("arrow");
                 this.arrow.transform.parent = this.transform;
@@ -32,16 +46,21 @@ namespace Ballz.Behaviours {
         }
 
         private IEnumerator GeneratePoints(){
-            while (true) {
-                yield return new WaitForSeconds(0.25f);
+            while (this.arrow != null) {
                 var point = GameObject.Instantiate(this.Point) as GameObject;
                 point.transform.parent = this.arrow.transform;
                 var pointBehavior = point.GetComponent<PointBehaviour>();
                 pointBehavior.parent = this;
+                yield return new WaitForSeconds(0.25f);
             }
         }
 
         public void OnMouseDrag() {
+            if (!this.enabled) {
+                // unfortunately, disabled objects still callback on OnMouse* :(
+                return;
+            }
+
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             var hit = new RaycastHit();
             LayerMask mask = 1 << LayerMask.NameToLayer("Floor");
@@ -62,6 +81,11 @@ namespace Ballz.Behaviours {
         }
 
         public void OnMouseUp() {
+            if (!this.enabled) {
+                // unfortunately, disabled objects still callback on OnMouse* :(
+                return;
+            }
+
             // store impulse in ball
             this.AppliedImpulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
             // this.GetComponent<Rigidbody>().AddForce(this.AppliedImpulse, ForceMode.Impulse);

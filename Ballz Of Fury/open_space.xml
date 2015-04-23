@@ -50,6 +50,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
+      <Name>Wall 5</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -98,6 +99,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
+      <Name>Wall 2</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -146,6 +148,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
+      <Name>Wall 5</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -194,6 +197,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
+      <Name>Wall 2</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -242,6 +246,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>8</Layer>
+      <Name>Floor</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -290,6 +295,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
+      <Name>Wall 3</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -338,6 +344,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
+      <Name>Wall 4</Name>
     </Obstacle>
   </Obstacles>
   <SpawnPoints>
@@ -360,6 +367,7 @@
       </Rotation>
       <PlayerID>0</PlayerID>
       <Ball>Defender</Ball>
+      <Name>SpawnPoint Defender 1</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -380,6 +388,7 @@
       </Rotation>
       <PlayerID>0</PlayerID>
       <Ball>Defender</Ball>
+      <Name>SpawnPoint Defender 2</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -400,6 +409,7 @@
       </Rotation>
       <PlayerID>0</PlayerID>
       <Ball>Midfielder</Ball>
+      <Name>SpawnPoint Midfielder</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -420,6 +430,7 @@
       </Rotation>
       <PlayerID>0</PlayerID>
       <Ball>Attacker</Ball>
+      <Name>SpawnPoint Attacker</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -440,6 +451,7 @@
       </Rotation>
       <PlayerID>1</PlayerID>
       <Ball>Defender</Ball>
+      <Name>SpawnPoint Defender 1</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -460,6 +472,7 @@
       </Rotation>
       <PlayerID>1</PlayerID>
       <Ball>Defender</Ball>
+      <Name>SpawnPoint Defender 2</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -480,6 +493,7 @@
       </Rotation>
       <PlayerID>1</PlayerID>
       <Ball>Midfielder</Ball>
+      <Name>SpawnPoint Midfielder</Name>
     </SpawnPoint>
     <SpawnPoint>
       <Position>
@@ -500,6 +514,7 @@
       </Rotation>
       <PlayerID>1</PlayerID>
       <Ball>Attacker</Ball>
+      <Name>SpawnPoint Attacker</Name>
     </SpawnPoint>
   </SpawnPoints>
   <Goals>

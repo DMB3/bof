@@ -51,6 +51,11 @@ namespace Ballz.Serialization {
             set;
         }
 
+        public String Name {
+            get;
+            set;
+        }
+
     }
 
 }

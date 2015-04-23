@@ -62,6 +62,7 @@ namespace Ballz.Behaviours {
                     newSpawn.PlayerID = spawn.PlayerID;
                     newSpawn.Position = childTransform.position;
                     newSpawn.Rotation = childTransform.rotation;
+                    newSpawn.Name = childTransform.name;
                     arena.SpawnPoints.Add(newSpawn);
                 } else if (child.tag.Equals("Goal")) {
                     GoalBehaviour goal = child.GetComponent<GoalBehaviour>();
@@ -86,6 +87,7 @@ namespace Ballz.Behaviours {
                         throw new Exception("Unknown collider shape for " + collider);
                     }
                     newObstacle.Layer = child.layer;
+                    newObstacle.Name = child.name;
                     arena.Obstacles.Add(newObstacle);
                 } else {
                     this.AddToArena(childTransform, arena);
@@ -131,6 +133,7 @@ namespace Ballz.Behaviours {
                 obstacleObject.transform.rotation = obstacle.Rotation;
                 obstacleObject.transform.localScale = obstacle.Scale;
                 obstacleObject.layer = obstacle.Layer;
+                obstacleObject.name = obstacle.Name;
                 obstacleObject.GetComponent<MeshRenderer>().material = Resources.Load(obstacle.RendererMaterialName, typeof(Material)) as Material;
             }
 
@@ -148,6 +151,7 @@ namespace Ballz.Behaviours {
                 spawnObject.transform.parent = this.ParentGameObject.transform;
                 spawnObject.transform.position = spawn.Position;
                 spawnObject.transform.rotation = spawn.Rotation;
+                spawnObject.name = spawn.Name;
                 spawnObject.GetComponent<SpawnPointBehaviour>().PlayerID = spawn.PlayerID;
                 spawnObject.GetComponent<SpawnPointBehaviour>().Ball = spawn.Ball;
                 spawnObject.GetComponent<SpawnPointBehaviour>().Spawn();
