@@ -29,10 +29,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -78,10 +78,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -127,10 +127,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -176,10 +176,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -225,10 +225,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -245,7 +245,7 @@
         </frictionDirection>
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
-      <Layer>8</Layer>
+      <Layer>0</Layer>
       <Name>Floor</Name>
     </Obstacle>
     <Obstacle>
@@ -274,10 +274,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -323,10 +323,10 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.6</dynamicFriction>
+        <dynamicFriction>0.66</dynamicFriction>
         <staticFriction>0.6</staticFriction>
-        <bounciness>0.235</bounciness>
-        <bouncyness>0.235</bouncyness>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
         <frictionDirection2>
           <x>0</x>
           <y>0</y>
@@ -567,4 +567,16 @@
       <PlayerID>1</PlayerID>
     </Goal>
   </Goals>
+  <Floor>
+    <Position>
+      <x>-11.0946341</x>
+      <y>-1</y>
+      <z>2.349922</z>
+    </Position>
+    <Scale>
+      <x>30</x>
+      <y>1</y>
+      <z>30</z>
+    </Scale>
+  </Floor>
 </Arena>

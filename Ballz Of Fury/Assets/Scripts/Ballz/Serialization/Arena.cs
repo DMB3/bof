@@ -36,6 +36,11 @@ namespace Ballz.Serialization {
             set;
         }
 
+        public Floor Floor {
+            get;
+            set;
+        }
+
     }
 
 }

@@ -72,6 +72,11 @@ namespace Ballz.Behaviours {
                     newGoal.Rotation = childTransform.rotation;
                     newGoal.Scale = childTransform.localScale;
                     arena.Goals.Add(newGoal);
+                } else if (child.tag.Equals("Floor")) {
+                    Floor newFloor = new Floor();
+                    newFloor.Position = childTransform.position;
+                    newFloor.Scale = childTransform.localScale;
+                    arena.Floor = newFloor;
                 } else if (collider != null) {
                     Obstacle newObstacle = new Obstacle();
                     newObstacle.PhysicsMaterial = collider.material;
@@ -118,6 +123,14 @@ namespace Ballz.Behaviours {
                 GameObject.Destroy(this.ParentGameObject.transform.GetChild(i).gameObject);
             }
             this.ParentGameObject.name = arena.Name;
+
+            GameObject floorObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            floorObject.transform.parent = this.ParentGameObject.transform;
+            floorObject.transform.position = arena.Floor.Position;
+            floorObject.transform.localScale = arena.Floor.Scale;
+            floorObject.name = "FloorPlane";
+            floorObject.layer = LayerMask.NameToLayer("Floor");
+            floorObject.GetComponent<MeshRenderer>().enabled = false;
 
             foreach (Obstacle obstacle in arena.Obstacles) {
                 GameObject obstacleObject;
