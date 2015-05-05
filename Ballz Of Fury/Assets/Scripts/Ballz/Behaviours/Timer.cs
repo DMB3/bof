@@ -6,23 +6,21 @@ namespace Ballz.Behaviours {
 
     public class Timer : MonoBehaviour {
 
-        public bool IsServer = true;
         public float Duration = 10;
+        public float NotifyDuration = 1;
+        public float RemainingDuration = 0;
+
         public Text Label;
 
-        private GameControl gameControl;
         private Coroutine countDown;
 
         public delegate void OnExpiredCallback();
+        public delegate void OnNotifyCallback();
+        
         public event OnExpiredCallback OnExpired;
+        public event OnNotifyCallback OnNotify;
 
-        // Use this for initialization
         void Start() {
-            if (this.IsServer) {
-                var allSleeping = this.gameObject.GetComponent<AllSleeping>();
-                allSleeping.OnAllSleeping += this.SendStateToClients;
-            }
-            this.gameControl = this.gameObject.GetComponent<GameControl>();
             this.StartCountDown();
         }
 
@@ -40,43 +38,28 @@ namespace Ballz.Behaviours {
         }
 
         public IEnumerator DoCountDown() {
-            float remaining = this.Duration;
-            while (remaining > 0) {
-                this.Label.text = string.Format("{0:0.0}", remaining);
+            this.RemainingDuration = this.Duration;
+            float notify = this.NotifyDuration;
+
+            while (this.RemainingDuration > 0) {
+                this.Label.text = string.Format("{0:0.0}", this.RemainingDuration);
                 yield return null;
-                remaining -= Time.deltaTime;
+                this.RemainingDuration -= Time.deltaTime;
+                notify -= Time.deltaTime;
+                if (notify <= 0) {
+                    if (this.OnNotify != null) {
+                        this.OnNotify();
+                    }
+                    notify = this.NotifyDuration;
+                }
             }
             this.Label.text = "";
-            if (this.IsServer && this.OnExpired != null) {
-                // another component should register ProcessTurn() as a callback for this event
-                this.OnExpired();  //this.ProcessTurn();
+
+            if (this.OnExpired != null) {
+                this.OnExpired();
             }
         }
 
-
-        // TODO: MOVE METHODS BELOW TO ANOTHER COMPONENT
-
-        /// <summary>
-        /// This method processes the turn on the server's side
-        /// </summary>
-        void ProcessTurn() {
-            this.SendImpulsesToClients();
-            this.gameControl.ApplyImpulses();
-        }
-
-        /// <summary>
-        /// Send all impulses (stored in '???') to all clients so that they can display their own simulation of the turn
-        /// </summary>
-        void SendImpulsesToClients() {
-
-        }
-
-        /// <summary>
-        /// Send the final state (object positions and rotations mainly) to all clients, so that they can fix the positions 
-        /// and everyone sees the same game state before the next turn begins
-        /// </summary>
-        void SendStateToClients() {
-               
-        }
     }
+
 }

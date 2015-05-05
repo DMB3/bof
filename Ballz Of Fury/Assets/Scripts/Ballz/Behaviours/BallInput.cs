@@ -88,7 +88,6 @@ namespace Ballz.Behaviours {
 
             // store impulse in ball
             this.AppliedImpulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
-            // this.GetComponent<Rigidbody>().AddForce(this.AppliedImpulse, ForceMode.Impulse);
         }
  
     }
