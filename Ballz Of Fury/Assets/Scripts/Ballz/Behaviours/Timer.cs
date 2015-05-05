@@ -3,10 +3,13 @@ using UnityEngine.UI;
 using System.Collections;
 
 namespace Ballz.Behaviours {
+
     public class Timer : MonoBehaviour {
+
         public bool IsServer = true;
         public float Duration = 10;
         public Text Label;
+
         private GameControl gameControl;
         private Coroutine countDown;
 
