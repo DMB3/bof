@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Ballz.Behaviours {
 
@@ -13,6 +14,9 @@ namespace Ballz.Behaviours {
         private const int SERVER_PORT = 9999;
 
         private bool initialized;
+        private bool simulating;
+
+        private Dictionary<string, object[]> ballStates;
 
         public Text RemoteIPText;
         public Text LocalIPText;
@@ -150,6 +154,28 @@ namespace Ballz.Behaviours {
             this.ShowArena();
             this.ArenaParent.GetComponent<ArenaSerializer>().LoadFromTargetFilePath();
 
+            this.GameUI.gameObject.SetActive(true);
+            this.ArenaParent.GetComponent<Timer>().enabled = true;
+            this.BeginNewTurn();
+
+            if (Network.isServer) {
+                // if we are the server, we will register to the Timer's OnNotify and OnExpired event
+                // we will use OnNotify to sync player's clocks (this is because doing stuff like dragging the window
+                // or something may cause player timer's to stop) and we will use OnExpired to force impulses to be applied
+                this.ArenaParent.GetComponent<Timer>().OnNotify += this.SynchronizeClocks;
+                this.ArenaParent.GetComponent<Timer>().OnExpired += this.ProcessTurn;
+                this.ArenaParent.GetComponent<AllSleeping>().OnAllSleeping += this.SendStateToClients;
+            } else {
+                this.ArenaParent.GetComponent<AllSleeping>().OnAllSleeping += this.SynchObjectStates;
+            }
+        }
+
+        [RPC]
+        private void BeginNewTurn() {
+            // restart the turn timer
+            this.ArenaParent.GetComponent<Timer>().Reset();
+            this.ArenaParent.GetComponent<Timer>().StartCountDown();
+
             // prevent input on other player's objects
             foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
                 if (body.tag.Equals("Ball")) {
@@ -159,17 +185,8 @@ namespace Ballz.Behaviours {
                 }
             }
 
-            this.GameUI.gameObject.SetActive(true);
-            this.ArenaParent.GetComponent<Timer>().enabled = true;
-
-            if (Network.isServer) {
-                // if we are the server, we will register to the Timer's OnNotify and OnExpired event
-                // we will use OnNotify to sync player's clocks (this is because doing stuff like dragging the window
-                // or something may cause player timer's to stop) and we will use OnExpired to force impulses to be applied
-                this.ArenaParent.GetComponent<Timer>().OnNotify += this.SynchronizeClocks;
-                this.ArenaParent.GetComponent<Timer>().OnExpired += this.ProcessTurn;
-                this.ArenaParent.GetComponent<AllSleeping>().OnAllSleeping += this.SendStateToClients;
-            }
+            // clean ball state cache
+            this.ballStates = new Dictionary<string, object[]>();
         }
 
         /// <summary>
@@ -184,19 +201,84 @@ namespace Ballz.Behaviours {
             this.ArenaParent.GetComponent<Timer>().RemainingDuration = timeLeft;
         }
 
+        [RPC]
+        private void SetBallImpulse(string ballName, Vector3 impulse) {
+            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
+                if (body.tag.Equals("Ball")) {
+                    BallInput input = body.GetComponent<BallInput>();
+                    if (input.Name.Equals(ballName)) {
+                        input.AppliedImpulse = impulse;
+                        break;
+                    }
+                }
+            }
+        }
+
+        [RPC]
+        private void ApplyAllImpulses() {
+            this.simulating = true;
+            this.ArenaParent.GetComponent<GameControl>().ApplyImpulses();
+        }
+
         /// <summary>
         /// This method processes the turn on the server's side.
         /// </summary>
         private void ProcessTurn() {
             this.SendImpulsesToClients();
-            this.ArenaParent.GetComponent<GameControl>().ApplyImpulses();
         }
 
         /// <summary>
         /// Send all impulses to all clients so that they can display their own simulation of the turn.
         /// </summary>
         private void SendImpulsesToClients() {
+            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
+                if (body.tag.Equals("Ball")) {
+                    BallInput input = body.GetComponent<BallInput>();
+                    this.GetComponent<NetworkView>().RPC("SetBallImpulse", RPCMode.All, input.Name, input.AppliedImpulse);
+                }
+            }
+            this.GetComponent<NetworkView>().RPC("ApplyAllImpulses", RPCMode.All);
+        }
 
+        private void SynchObjectStates() {
+            this.simulating = false;
+
+            foreach (KeyValuePair<string,object[]> keyValue in this.ballStates) {
+                this.ApplyBallState(keyValue.Key, (Vector3)keyValue.Value[0], (Quaternion)keyValue.Value[1]);
+            }
+
+            this.ballStates = new Dictionary<string, object[]>();
+        }
+
+        private void ApplyBallState(string ballName, Vector3 position, Quaternion rotation) {
+            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
+                if (body.tag.Equals("Ball")) {
+                    BallInput input = body.GetComponent<BallInput>();
+                    if (input.Name.Equals(ballName)) {
+                        body.transform.position = position;
+                        body.transform.rotation = rotation;
+                        break;
+                    }
+                }
+            }
+        }
+
+        [RPC]
+        private void ReceiveBallState(string ballName, Vector3 position, Quaternion rotation) {
+            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
+                if (body.tag.Equals("Ball")) {
+                    BallInput input = body.GetComponent<BallInput>();
+                    if (input.Name.Equals(ballName)) {
+                        if (this.simulating) {
+                            this.ballStates.Add(ballName, new object[] { position, rotation });
+                        } else {
+                            body.transform.position = position;
+                            body.transform.rotation = rotation;
+                        }
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -204,7 +286,14 @@ namespace Ballz.Behaviours {
         /// and everyone sees the same game state before the next turn begins.
         /// </summary>
         private void SendStateToClients() {
+            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
+                if (body.tag.Equals("Ball")) {
+                    BallInput input = body.GetComponent<BallInput>();
+                    this.GetComponent<NetworkView>().RPC("ReceiveBallState", RPCMode.All, input.Name, input.transform.position, input.transform.rotation);
+                }
+            }
 
+            this.GetComponent<NetworkView>().RPC("BeginNewTurn", RPCMode.All);
         }
 
     }

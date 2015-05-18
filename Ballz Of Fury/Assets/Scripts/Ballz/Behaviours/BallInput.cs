@@ -19,6 +19,11 @@ namespace Ballz.Behaviours {
         private GameObject arrow = null;
         private Coroutine pointGen = null;
 
+        internal string Name {
+            get;
+            set;
+        }
+
         public void ClearInputArrow() {
             if (this.arrow != null) {
                 GameObject.Destroy(this.arrow);
@@ -88,6 +93,16 @@ namespace Ballz.Behaviours {
 
             // store impulse in ball
             this.AppliedImpulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
+            if (Network.isClient) {
+                this.SendImpulseToServer();
+            }
+        }
+
+        /// <summary>
+        /// Send this.AppliedImpulse to server along with the ball's ID.
+        /// </summary>
+        private void SendImpulseToServer() {
+            GameObject.FindObjectOfType<NetworkManager>().GetComponent<NetworkView>().RPC("SetBallImpulse", RPCMode.All, this.Name, this.AppliedImpulse);
         }
  
     }

@@ -24,6 +24,10 @@ namespace Ballz.Behaviours {
             this.StartCountDown();
         }
 
+        public void Reset() {
+            this.RemainingDuration = this.Duration;
+        }
+
         public void Interrupt() {
             this.StopCoroutine(this.countDown);
             this.countDown = null;

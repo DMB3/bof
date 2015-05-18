@@ -48,6 +48,7 @@ namespace Ballz.Behaviours {
             obj.transform.parent = this.transform.parent;
 
             obj.GetComponent<BallInput>().PlayerID = this.PlayerID;
+            obj.GetComponent<BallInput>().Name = String.Format("{0}-{1}", this.PlayerID, this.name);
             obj.GetComponent<MeshRenderer>().material.color = this.PlayerColours.Evaluate(this.PlayerID / 10.0f);
         }
 
