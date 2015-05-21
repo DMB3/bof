@@ -26,13 +26,17 @@ namespace Ballz.Behaviours {
         public Text LocalIPText;
         public Text StandByText;
         public Button CloseStandByButton;
-        public Button ReadyImpulsesButton;
 
         public Transform MainMenuPanel;
         public Transform StandByPanel;
         public Transform GameUI;
 
         public GameObject ArenaParent;
+
+        public Transform youScorePanel;
+        public Transform opponentScorePanel;
+        public Text youScoreText;
+        public Text opponentScoreText;
 
         void Start() {
             this.initialized = false;
@@ -43,6 +47,13 @@ namespace Ballz.Behaviours {
 
             // display the main menu panel
             this.ShowMainMenu();
+        }
+
+        void Update() {
+            if (this.simulating) {
+                this.youScoreText.text = "0";
+                this.opponentScoreText.text = "0";
+            }
         }
 
         public void ConnectToServer() {
@@ -162,6 +173,9 @@ namespace Ballz.Behaviours {
             this.GameUI.gameObject.SetActive(true);
             this.ArenaParent.GetComponent<Timer>().enabled = true;
             this.BeginNewTurn();
+
+            this.youScorePanel.GetComponent<Image>().color = this.myBalls[0].GetComponent<MeshRenderer>().material.color;
+            this.opponentScorePanel.GetComponent<Image>().color = this.opponentsBalls[0].GetComponent<MeshRenderer>().material.color;
 
             if (Network.isServer) {
                 // if we are the server, we will register to the Timer's OnNotify and OnExpired event
