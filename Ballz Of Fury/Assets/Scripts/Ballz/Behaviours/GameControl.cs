@@ -12,32 +12,31 @@ namespace Ballz.Behaviours {
     /// </summary>
     public class GameControl : MonoBehaviour {
 
-        public Button ApplyImpulseButton;
+        private List<GameObject> allBalls;
 
-        public void ApplyImpulses() {
-            this.ApplyImpulseButton.gameObject.SetActive(false);
+        void Start() {
+            this.allBalls = new List<GameObject>();
+
             foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
                 if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    Vector3 impulse = input.AppliedImpulse;
-                    body.AddForce(impulse, ForceMode.Impulse);
-                    input.ClearInputArrow();
-                    input.enabled = false;
+                    this.allBalls.Add(body.gameObject);
                 }
+            }
+        }
+
+        public void ApplyImpulses() {
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                Vector3 impulse = input.AppliedImpulse;
+                ball.GetComponent<Rigidbody>().AddForce(impulse, ForceMode.Impulse);
+                input.ClearInputArrow();
             }
             this.GetComponent<AllSleeping>().OnAllSleeping += this.ArenaSleeping;
             this.GetComponent<AllSleeping>().StartCheck();
         }
 
         public void ArenaSleeping() {
-            this.ApplyImpulseButton.gameObject.SetActive(true);
             this.GetComponent<AllSleeping>().OnAllSleeping -= this.ArenaSleeping;
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    input.enabled = true;
-                }
-            }
         }
 
     }

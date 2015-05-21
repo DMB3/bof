@@ -18,6 +18,10 @@ namespace Ballz.Behaviours {
 
         private Dictionary<string, object[]> ballStates;
 
+        private List<GameObject> allBalls;
+        private List<GameObject> myBalls;
+        private List<GameObject> opponentsBalls;
+
         public Text RemoteIPText;
         public Text LocalIPText;
         public Text StandByText;
@@ -153,6 +157,7 @@ namespace Ballz.Behaviours {
             // show the arena parent and load a new arena
             this.ShowArena();
             this.ArenaParent.GetComponent<ArenaSerializer>().LoadFromTargetFilePath();
+            this.FindBalls();
 
             this.GameUI.gameObject.SetActive(true);
             this.ArenaParent.GetComponent<Timer>().enabled = true;
@@ -170,19 +175,39 @@ namespace Ballz.Behaviours {
             }
         }
 
+        private void FindBalls() {
+            this.allBalls = new List<GameObject>();
+            this.myBalls = new List<GameObject>();
+            this.opponentsBalls = new List<GameObject>();
+
+            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
+                if (body.tag.Equals("Ball")) {
+                    this.allBalls.Add(body.gameObject);
+                    BallInput input = body.GetComponent<BallInput>();
+                    int myPlayer = (Network.isServer ? 0 : 1);
+                    if (input.PlayerID == myPlayer) {
+                        this.myBalls.Add(body.gameObject);
+                    } else {
+                        this.opponentsBalls.Add(body.gameObject);
+                    }
+                }
+            }
+        }
+
         [RPC]
         private void BeginNewTurn() {
             // restart the turn timer
             this.ArenaParent.GetComponent<Timer>().Reset();
             this.ArenaParent.GetComponent<Timer>().StartCountDown();
 
-            // prevent input on other player's objects
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    int myPlayer = (Network.isServer ? 0 : 1);
-                    input.enabled = (input.PlayerID == myPlayer);
-                }
+            // prevent input on other player's objects and allow input on our objects
+            foreach (GameObject ball in this.myBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                input.enabled = true;
+            }
+            foreach (GameObject ball in this.opponentsBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                input.enabled = false;
             }
 
             // clean ball state cache
@@ -203,19 +228,23 @@ namespace Ballz.Behaviours {
 
         [RPC]
         private void SetBallImpulse(string ballName, Vector3 impulse) {
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    if (input.Name.Equals(ballName)) {
-                        input.AppliedImpulse = impulse;
-                        break;
-                    }
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                if (input.Name.Equals(ballName)) {
+                    input.AppliedImpulse = impulse;
+                    break;
                 }
             }
         }
 
         [RPC]
         private void ApplyAllImpulses() {
+            // prevent impulses on balls
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                input.enabled = false;
+            }
+
             this.simulating = true;
             this.ArenaParent.GetComponent<GameControl>().ApplyImpulses();
         }
@@ -231,11 +260,9 @@ namespace Ballz.Behaviours {
         /// Send all impulses to all clients so that they can display their own simulation of the turn.
         /// </summary>
         private void SendImpulsesToClients() {
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    this.GetComponent<NetworkView>().RPC("SetBallImpulse", RPCMode.All, input.Name, input.AppliedImpulse);
-                }
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                this.GetComponent<NetworkView>().RPC("SetBallImpulse", RPCMode.All, input.Name, input.AppliedImpulse);
             }
             this.GetComponent<NetworkView>().RPC("ApplyAllImpulses", RPCMode.All);
         }
@@ -251,32 +278,28 @@ namespace Ballz.Behaviours {
         }
 
         private void ApplyBallState(string ballName, Vector3 position, Quaternion rotation) {
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    if (input.Name.Equals(ballName)) {
-                        body.transform.position = position;
-                        body.transform.rotation = rotation;
-                        break;
-                    }
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                if (input.Name.Equals(ballName)) {
+                    ball.transform.position = position;
+                    ball.transform.rotation = rotation;
+                    break;
                 }
             }
         }
 
         [RPC]
         private void ReceiveBallState(string ballName, Vector3 position, Quaternion rotation) {
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    if (input.Name.Equals(ballName)) {
-                        if (this.simulating) {
-                            this.ballStates.Add(ballName, new object[] { position, rotation });
-                        } else {
-                            body.transform.position = position;
-                            body.transform.rotation = rotation;
-                        }
-                        break;
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                if (input.Name.Equals(ballName)) {
+                    if (this.simulating) {
+                        this.ballStates.Add(ballName, new object[] { position, rotation });
+                    } else {
+                        ball.transform.position = position;
+                        ball.transform.rotation = rotation;
                     }
+                    break;
                 }
             }
         }
@@ -286,11 +309,9 @@ namespace Ballz.Behaviours {
         /// and everyone sees the same game state before the next turn begins.
         /// </summary>
         private void SendStateToClients() {
-            foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
-                if (body.tag.Equals("Ball")) {
-                    BallInput input = body.GetComponent<BallInput>();
-                    this.GetComponent<NetworkView>().RPC("ReceiveBallState", RPCMode.All, input.Name, input.transform.position, input.transform.rotation);
-                }
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                this.GetComponent<NetworkView>().RPC("ReceiveBallState", RPCMode.All, input.Name, input.transform.position, input.transform.rotation);
             }
 
             this.GetComponent<NetworkView>().RPC("BeginNewTurn", RPCMode.All);
