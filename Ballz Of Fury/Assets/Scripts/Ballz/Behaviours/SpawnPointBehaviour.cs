@@ -26,30 +26,33 @@ namespace Ballz.Behaviours {
 
         public Gradient PlayerColours;
 
-        public void Spawn() {
-            GameObject obj;
+        private GameObject spawnedBall;
 
-            switch (this.Ball) {
-                case BallType.Attacker:
-                    obj = GameObject.Instantiate(this.AttackerPrefab);
-                    break;
-                case BallType.Defender:
-                    obj = GameObject.Instantiate(this.DefenderPrefab);
-                    break;
-                case BallType.Midfielder:
-                    obj = GameObject.Instantiate(this.MidfielderPrefab);
-                    break;
-                default:
-                    throw new Exception("Invalid ball type " + this.Ball);
+        public void Spawn() {
+            if (this.spawnedBall == null) {
+                switch (this.Ball) {
+                    case BallType.Attacker:
+                        this.spawnedBall = GameObject.Instantiate(this.AttackerPrefab);
+                        break;
+                    case BallType.Defender:
+                        this.spawnedBall = GameObject.Instantiate(this.DefenderPrefab);
+                        break;
+                    case BallType.Midfielder:
+                        this.spawnedBall = GameObject.Instantiate(this.MidfielderPrefab);
+                        break;
+                    default:
+                        throw new Exception("Invalid ball type " + this.Ball);
+                }
+
+                this.spawnedBall.GetComponent<BallInput>().PlayerID = this.PlayerID;
+                this.spawnedBall.GetComponent<BallInput>().Name = String.Format("{0}-{1}", this.PlayerID, this.name);
+                this.spawnedBall.GetComponent<BallInput>().spawnPoint = this;
+                this.spawnedBall.GetComponent<MeshRenderer>().material.color = this.PlayerColours.Evaluate(this.PlayerID / 10.0f);
             }
 
-            obj.transform.position = this.transform.position;
-            obj.transform.rotation = this.transform.rotation;
-            obj.transform.parent = this.transform.parent;
-
-            obj.GetComponent<BallInput>().PlayerID = this.PlayerID;
-            obj.GetComponent<BallInput>().Name = String.Format("{0}-{1}", this.PlayerID, this.name);
-            obj.GetComponent<MeshRenderer>().material.color = this.PlayerColours.Evaluate(this.PlayerID / 10.0f);
+            this.spawnedBall.transform.position = this.transform.position;
+            this.spawnedBall.transform.rotation = this.transform.rotation;
+            this.spawnedBall.transform.parent = this.transform.parent;
         }
 
     }

@@ -15,6 +15,8 @@ namespace Ballz.Behaviours {
 
         private bool initialized;
         private bool simulating;
+        private bool doRespawn;
+        private bool gameEnded;
 
         private Dictionary<string, object[]> ballStates;
 
@@ -22,9 +24,10 @@ namespace Ballz.Behaviours {
         private List<GameObject> myBalls;
         private List<GameObject> opponentsBalls;
 
-        public Text RemoteIPText;
+        public InputField RemoteIPText;
         public Text LocalIPText;
         public Text StandByText;
+        public InputField ScoreLimitText;
         public Button CloseStandByButton;
 
         public Transform MainMenuPanel;
@@ -33,26 +36,34 @@ namespace Ballz.Behaviours {
 
         public GameObject ArenaParent;
 
-        public Transform youScorePanel;
-        public Transform opponentScorePanel;
-        public Text youScoreText;
-        public Text opponentScoreText;
+        public Transform YouScorePanel;
+        public Transform OpponentScorePanel;
+        public Text YouScoreText;
+        public Text OpponentScoreText;
+        public Text ScoreLimitIndicator;
+
+        private GameControl control;
+        private int scoreLimit;
 
         void Start() {
             this.initialized = false;
+            this.control = this.ArenaParent.GetComponent<GameControl>();
+
+            // display the main menu panel
+            this.ShowMainMenu();
 
             // fill in the textboxes with our public IP address, if we have one, or the LAN address otherwise
             this.LocalIPText.text = (Network.HavePublicAddress() ? Network.player.externalIP : Network.player.ipAddress);
             this.RemoteIPText.text = this.LocalIPText.text;
-
-            // display the main menu panel
-            this.ShowMainMenu();
+            
+            // fill in game setup stuff
+            this.ScoreLimitText.text = "5";
         }
 
         void Update() {
             if (this.simulating) {
-                this.youScoreText.text = "0";
-                this.opponentScoreText.text = "0";
+                this.YouScoreText.text = this.control.PlayerScore.ToString();
+                this.OpponentScoreText.text = this.control.OpponentScore.ToString();
             }
         }
 
@@ -168,14 +179,21 @@ namespace Ballz.Behaviours {
             // show the arena parent and load a new arena
             this.ShowArena();
             this.ArenaParent.GetComponent<ArenaSerializer>().LoadFromTargetFilePath();
-            this.FindBalls();
+
+            this.gameEnded = false;
+            this.doRespawn = false;
 
             this.GameUI.gameObject.SetActive(true);
+
+            this.FindBalls();
+
             this.ArenaParent.GetComponent<Timer>().enabled = true;
             this.BeginNewTurn();
 
-            this.youScorePanel.GetComponent<Image>().color = this.myBalls[0].GetComponent<MeshRenderer>().material.color;
-            this.opponentScorePanel.GetComponent<Image>().color = this.opponentsBalls[0].GetComponent<MeshRenderer>().material.color;
+            this.control.PlayerScore = 0;
+            this.control.OpponentScore = 0;
+            this.YouScorePanel.GetComponent<Image>().color = this.myBalls[0].GetComponent<MeshRenderer>().material.color;
+            this.OpponentScorePanel.GetComponent<Image>().color = this.opponentsBalls[0].GetComponent<MeshRenderer>().material.color;
 
             if (Network.isServer) {
                 // if we are the server, we will register to the Timer's OnNotify and OnExpired event
@@ -184,21 +202,22 @@ namespace Ballz.Behaviours {
                 this.ArenaParent.GetComponent<Timer>().OnNotify += this.SynchronizeClocks;
                 this.ArenaParent.GetComponent<Timer>().OnExpired += this.ProcessTurn;
                 this.ArenaParent.GetComponent<AllSleeping>().OnAllSleeping += this.SendStateToClients;
+                this.GetComponent<NetworkView>().RPC("SetScoreLimit", RPCMode.All, int.Parse(this.ScoreLimitText.text));
             } else {
                 this.ArenaParent.GetComponent<AllSleeping>().OnAllSleeping += this.SynchObjectStates;
             }
         }
-
+        
         private void FindBalls() {
             this.allBalls = new List<GameObject>();
             this.myBalls = new List<GameObject>();
             this.opponentsBalls = new List<GameObject>();
 
+            int myPlayer = (Network.isServer ? 0 : 1);
             foreach (Rigidbody body in GameObject.FindObjectsOfType<Rigidbody>() as Rigidbody[]) {
                 if (body.tag.Equals("Ball")) {
                     this.allBalls.Add(body.gameObject);
                     BallInput input = body.GetComponent<BallInput>();
-                    int myPlayer = (Network.isServer ? 0 : 1);
                     if (input.PlayerID == myPlayer) {
                         this.myBalls.Add(body.gameObject);
                     } else {
@@ -209,23 +228,37 @@ namespace Ballz.Behaviours {
         }
 
         [RPC]
+        private void SetScoreLimit(int limit) {
+            this.ScoreLimitIndicator.text = string.Format("Score Limit: {0}", limit);
+            this.scoreLimit = limit;
+        }
+
+        [RPC]
         private void BeginNewTurn() {
-            // restart the turn timer
-            this.ArenaParent.GetComponent<Timer>().Reset();
-            this.ArenaParent.GetComponent<Timer>().StartCountDown();
+            if (!this.gameEnded) {
+                if (this.doRespawn) {
+                    // respawn all balls
+                    this.RespawnBalls();
+                    this.doRespawn = false;
+                }
 
-            // prevent input on other player's objects and allow input on our objects
-            foreach (GameObject ball in this.myBalls) {
-                BallInput input = ball.GetComponent<BallInput>();
-                input.enabled = true;
-            }
-            foreach (GameObject ball in this.opponentsBalls) {
-                BallInput input = ball.GetComponent<BallInput>();
-                input.enabled = false;
-            }
+                // restart the turn timer
+                this.ArenaParent.GetComponent<Timer>().Reset();
+                this.ArenaParent.GetComponent<Timer>().StartCountDown();
 
-            // clean ball state cache
-            this.ballStates = new Dictionary<string, object[]>();
+                // prevent input on other player's objects and allow input on our objects
+                foreach (GameObject ball in this.myBalls) {
+                    BallInput input = ball.GetComponent<BallInput>();
+                    input.enabled = true;
+                }
+                foreach (GameObject ball in this.opponentsBalls) {
+                    BallInput input = ball.GetComponent<BallInput>();
+                    input.enabled = false;
+                }
+
+                // clean ball state cache
+                this.ballStates = new Dictionary<string, object[]>();
+            }
         }
 
         /// <summary>
@@ -260,7 +293,7 @@ namespace Ballz.Behaviours {
             }
 
             this.simulating = true;
-            this.ArenaParent.GetComponent<GameControl>().ApplyImpulses();
+            this.control.ApplyImpulses();
         }
 
         /// <summary>
@@ -329,6 +362,39 @@ namespace Ballz.Behaviours {
             }
 
             this.GetComponent<NetworkView>().RPC("BeginNewTurn", RPCMode.All);
+        }
+
+        [RPC]
+        private void MarkGameEnded() {
+            this.gameEnded = true;
+        }
+
+        [RPC]
+        private void AddGoal(int playerID, int scoreValue) {
+            int myPlayer = (Network.isServer ? 0 : 1);
+            if (playerID == myPlayer) {
+                this.control.PlayerScore += scoreValue;
+            } else {
+                this.control.OpponentScore += scoreValue;
+            }
+            this.doRespawn = true;
+
+            if (Network.isServer) {
+                this.CheckScoreLimit();
+            }
+        }
+
+        private void CheckScoreLimit() {
+            if (this.control.PlayerScore >= this.scoreLimit || this.control.OpponentScore >= this.scoreLimit) {
+                // game has ended, whenever next turn is set to begin - don't begin it :)
+                this.GetComponent<NetworkView>().RPC("MarkGameEnded", RPCMode.All);
+            }
+        }
+
+        private void RespawnBalls() {
+            foreach (GameObject ball in this.allBalls) {
+                ball.GetComponent<BallInput>().spawnPoint.Spawn();
+            }
         }
 
     }

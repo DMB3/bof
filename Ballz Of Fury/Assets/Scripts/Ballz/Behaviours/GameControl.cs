@@ -14,6 +14,9 @@ namespace Ballz.Behaviours {
 
         private List<GameObject> allBalls;
 
+        public int PlayerScore = 0;
+        public int OpponentScore = 0;
+
         void Start() {
             this.allBalls = new List<GameObject>();
 

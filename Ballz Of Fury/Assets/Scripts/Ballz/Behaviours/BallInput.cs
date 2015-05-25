@@ -11,10 +11,12 @@ namespace Ballz.Behaviours {
         public GameObject Point;
         public float MaxImpulse = 10f;
         public int PlayerID;
+        public int ScoreValue = 1;
 
         public Vector3 AppliedImpulse;
 
         internal Vector2 direction;
+        internal SpawnPointBehaviour spawnPoint;
     
         private GameObject arrow = null;
         private Coroutine pointGen = null;
@@ -103,6 +105,15 @@ namespace Ballz.Behaviours {
         /// </summary>
         private void SendImpulseToServer() {
             GameObject.FindObjectOfType<NetworkManager>().GetComponent<NetworkView>().RPC("SetBallImpulse", RPCMode.All, this.Name, this.AppliedImpulse);
+        }
+
+        /// <summary>
+        /// Mark this ball as having scored a goal.
+        /// </summary>
+        internal void MarkGoal() {
+            if (Network.isServer) {
+                GameObject.FindObjectOfType<NetworkManager>().GetComponent<NetworkView>().RPC("AddGoal", RPCMode.All, this.PlayerID, this.ScoreValue);
+            }
         }
  
     }

@@ -46,7 +46,7 @@ namespace Ballz.Behaviours {
             float notify = this.NotifyDuration;
 
             while (this.RemainingDuration > 0) {
-                this.Label.text = string.Format("{0:0.0}", this.RemainingDuration);
+                this.Label.text = string.Format("Time Left: {0:0.0}", this.RemainingDuration);
                 yield return null;
                 this.RemainingDuration -= Time.deltaTime;
                 notify -= Time.deltaTime;

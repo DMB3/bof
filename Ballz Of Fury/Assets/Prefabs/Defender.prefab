@@ -92,6 +92,7 @@ MonoBehaviour:
   Point: {fileID: 166134, guid: d73d03ee593b5eb4f8fd7b3e03ac6420, type: 2}
   MaxImpulse: 10
   PlayerID: 0
+  ScoreValue: 3
   AppliedImpulse: {x: 0, y: 0, z: 0}
 --- !u!135 &13565444
 SphereCollider:
