@@ -41,6 +41,7 @@ namespace Ballz.Behaviours {
         public Text YouScoreText;
         public Text OpponentScoreText;
         public Text ScoreLimitIndicator;
+        public Toggle PublicIPToggle;
 
         private GameControl control;
         private int scoreLimit;
@@ -53,9 +54,13 @@ namespace Ballz.Behaviours {
             this.ShowMainMenu();
 
             // fill in the textboxes with our public IP address, if we have one, or the LAN address otherwise
-            this.LocalIPText.text = (Network.HavePublicAddress() ? Network.player.externalIP : Network.player.ipAddress);
+            this.PublicIPToggle.isOn = Network.HavePublicAddress();
+            this.PublicIPToggle.interactable = Network.HavePublicAddress();
+            this.LocalIPText.text = Network.player.externalIP;
+
+            this.LocalIPText.text = (this.PublicIPToggle.isOn ? Network.player.externalIP : Network.player.ipAddress);
             this.RemoteIPText.text = this.LocalIPText.text;
-            
+
             // fill in game setup stuff
             this.ScoreLimitText.text = "5";
         }
@@ -65,6 +70,10 @@ namespace Ballz.Behaviours {
                 this.YouScoreText.text = this.control.PlayerScore.ToString();
                 this.OpponentScoreText.text = this.control.OpponentScore.ToString();
             }
+        }
+
+        public void TogglePublicIP() {
+            this.LocalIPText.text = (this.PublicIPToggle.isOn ? Network.player.externalIP : Network.player.ipAddress);
         }
 
         public void ConnectToServer() {
@@ -96,7 +105,7 @@ namespace Ballz.Behaviours {
             this.StandByText.text = "Attempting to start server, please wait...";
 
             // attempt to start server
-            NetworkConnectionError error = Network.InitializeServer(NetworkManager.MAXIMUM_CONNECTIONS, NetworkManager.SERVER_PORT, !Network.HavePublicAddress());
+            NetworkConnectionError error = Network.InitializeServer(NetworkManager.MAXIMUM_CONNECTIONS, NetworkManager.SERVER_PORT, !this.PublicIPToggle.isOn);
 
             if (!this.initialized) {
                 if (error == NetworkConnectionError.NoError) {
