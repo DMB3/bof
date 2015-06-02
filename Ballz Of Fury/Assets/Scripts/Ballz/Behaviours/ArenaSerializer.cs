@@ -34,6 +34,7 @@ namespace Ballz.Behaviours {
             arena.Goals = new List<Goal>();
             arena.Obstacles = new List<Obstacle>();
             arena.SpawnPoints = new List<SpawnPoint>();
+            arena.Lights = new List<Ballz.Serialization.Light>();
             arena.Name = this.ParentGameObject.name;
             this.AddToArena(this.ParentGameObject.transform, arena);
 
@@ -77,6 +78,19 @@ namespace Ballz.Behaviours {
                     newFloor.Position = childTransform.position;
                     newFloor.Scale = childTransform.localScale;
                     arena.Floor = newFloor;
+                } else if (child.tag.Equals("Light")) {
+                    Ballz.Serialization.Light newLight = new Ballz.Serialization.Light();
+                    newLight.Name = child.name;
+                    newLight.Position = childTransform.position;
+                    newLight.Rotation = childTransform.rotation;
+                    UnityEngine.Light light = child.GetComponent<UnityEngine.Light>();
+                    newLight.LightType = light.type;
+                    newLight.Range = light.range;
+                    newLight.SpotAngle = light.spotAngle;
+                    newLight.Intensity = light.intensity;
+                    newLight.BounceIntensity = light.bounceIntensity;
+                    newLight.Colour = light.color;
+                    arena.Lights.Add(newLight);
                 } else if (collider != null) {
                     Obstacle newObstacle = new Obstacle();
                     newObstacle.PhysicsMaterial = collider.material;
@@ -94,6 +108,7 @@ namespace Ballz.Behaviours {
                     newObstacle.Layer = child.layer;
                     newObstacle.Name = child.name;
                     arena.Obstacles.Add(newObstacle);
+                    this.AddToArena(childTransform, arena);
                 } else {
                     this.AddToArena(childTransform, arena);
                 }
@@ -168,6 +183,21 @@ namespace Ballz.Behaviours {
                 spawnObject.GetComponent<SpawnPointBehaviour>().PlayerID = spawn.PlayerID;
                 spawnObject.GetComponent<SpawnPointBehaviour>().Ball = spawn.Ball;
                 spawnObject.GetComponent<SpawnPointBehaviour>().Spawn();
+            }
+
+            foreach (Ballz.Serialization.Light light in arena.Lights) {
+                GameObject lightObject = new GameObject();
+                lightObject.transform.parent = this.ParentGameObject.transform;
+                UnityEngine.Light gameLight = lightObject.AddComponent<UnityEngine.Light>();
+                lightObject.name = light.Name;
+                lightObject.transform.position = light.Position;
+                lightObject.transform.rotation = light.Rotation;
+                gameLight.type = light.LightType;
+                gameLight.range = light.Range;
+                gameLight.spotAngle = light.SpotAngle;
+                gameLight.intensity = light.Intensity;
+                gameLight.bounceIntensity = light.BounceIntensity;
+                gameLight.color = light.Colour;
             }
         }
 

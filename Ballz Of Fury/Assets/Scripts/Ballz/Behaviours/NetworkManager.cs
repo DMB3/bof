@@ -10,6 +10,9 @@ namespace Ballz.Behaviours {
     /// </summary>
     public class NetworkManager : MonoBehaviour {
 
+        // magic constant used to multiply impulses to tweak physics behaviour
+        private const float IMPULSE_MULTIPLIER_MAGIC = 2.2f;
+
         private const int MAXIMUM_CONNECTIONS = 2;
         private const int SERVER_PORT = 9999;
 
@@ -284,13 +287,8 @@ namespace Ballz.Behaviours {
 
         [RPC]
         private void SetBallImpulse(string ballName, Vector3 impulse) {
-            foreach (GameObject ball in this.allBalls) {
-                BallInput input = ball.GetComponent<BallInput>();
-                if (input.Name.Equals(ballName)) {
-                    input.AppliedImpulse = impulse;
-                    break;
-                }
-            }
+            BallInput input = this.FindBallInputWithName(ballName);
+            input.AppliedImpulse = impulse * NetworkManager.IMPULSE_MULTIPLIER_MAGIC;
         }
 
         [RPC]
@@ -334,29 +332,19 @@ namespace Ballz.Behaviours {
         }
 
         private void ApplyBallState(string ballName, Vector3 position, Quaternion rotation) {
-            foreach (GameObject ball in this.allBalls) {
-                BallInput input = ball.GetComponent<BallInput>();
-                if (input.Name.Equals(ballName)) {
-                    ball.transform.position = position;
-                    ball.transform.rotation = rotation;
-                    break;
-                }
-            }
+            GameObject ball = this.FindBallWithName(ballName);
+            ball.transform.position = position;
+            ball.transform.rotation = rotation;
         }
 
         [RPC]
         private void ReceiveBallState(string ballName, Vector3 position, Quaternion rotation) {
-            foreach (GameObject ball in this.allBalls) {
-                BallInput input = ball.GetComponent<BallInput>();
-                if (input.Name.Equals(ballName)) {
-                    if (this.simulating) {
-                        this.ballStates.Add(ballName, new object[] { position, rotation });
-                    } else {
-                        ball.transform.position = position;
-                        ball.transform.rotation = rotation;
-                    }
-                    break;
-                }
+            GameObject ball = this.FindBallWithName(ballName);
+            if (this.simulating) {
+                this.ballStates.Add(ballName, new object[] { position, rotation });
+            } else {
+                ball.transform.position = position;
+                ball.transform.rotation = rotation;
             }
         }
 
@@ -404,6 +392,28 @@ namespace Ballz.Behaviours {
             foreach (GameObject ball in this.allBalls) {
                 ball.GetComponent<BallInput>().spawnPoint.Spawn();
             }
+        }
+
+        private GameObject FindBallWithName(string ballName) {
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                if (input.Name.Equals(ballName)) {
+                    return ball;
+                }
+            }
+
+            return null;
+        }
+
+        private BallInput FindBallInputWithName(string ballName) {
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                if (input.Name.Equals(ballName)) {
+                    return input;
+                }
+            }
+
+            return null;
         }
 
     }

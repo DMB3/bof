@@ -36,6 +36,11 @@ namespace Ballz.Serialization {
             set;
         }
 
+        public List<Ballz.Serialization.Light> Lights {
+            get;
+            set;
+        }
+
         public Floor Floor {
             get;
             set;

@@ -29,8 +29,8 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
         <bounciness>0.12</bounciness>
         <bouncyness>0.12</bouncyness>
         <frictionDirection2>
@@ -50,7 +50,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
-      <Name>Wall 5</Name>
+      <Name>Wall 1</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -78,8 +78,8 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
         <bounciness>0.12</bounciness>
         <bouncyness>0.12</bouncyness>
         <frictionDirection2>
@@ -127,8 +127,8 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
         <bounciness>0.12</bounciness>
         <bouncyness>0.12</bouncyness>
         <frictionDirection2>
@@ -148,7 +148,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
-      <Name>Wall 5</Name>
+      <Name>Wall 1</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -176,8 +176,8 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
         <bounciness>0.12</bounciness>
         <bouncyness>0.12</bouncyness>
         <frictionDirection2>
@@ -198,55 +198,6 @@
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
       <Name>Wall 2</Name>
-    </Obstacle>
-    <Obstacle>
-      <Shape>Cube</Shape>
-      <Position>
-        <x>-11.0946341</x>
-        <y>-1</y>
-        <z>2.349922</z>
-      </Position>
-      <Rotation>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-        <w>1</w>
-        <eulerAngles>
-          <x>0</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>30</x>
-        <y>1</y>
-        <z>30</z>
-      </Scale>
-      <PhysicsMaterial>
-        <name>Wood (Instance)</name>
-        <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
-        <bounciness>0.12</bounciness>
-        <bouncyness>0.12</bouncyness>
-        <frictionDirection2>
-          <x>0</x>
-          <y>0</y>
-          <z>0</z>
-        </frictionDirection2>
-        <dynamicFriction2>0</dynamicFriction2>
-        <staticFriction2>0</staticFriction2>
-        <frictionCombine>Average</frictionCombine>
-        <bounceCombine>Average</bounceCombine>
-        <frictionDirection>
-          <x>0</x>
-          <y>0</y>
-          <z>0</z>
-        </frictionDirection>
-      </PhysicsMaterial>
-      <RendererMaterialName>Wall Material</RendererMaterialName>
-      <Layer>0</Layer>
-      <Name>Floor</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -274,8 +225,8 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
         <bounciness>0.12</bounciness>
         <bouncyness>0.12</bouncyness>
         <frictionDirection2>
@@ -295,7 +246,7 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
-      <Name>Wall 3</Name>
+      <Name>Wall</Name>
     </Obstacle>
     <Obstacle>
       <Shape>Cube</Shape>
@@ -323,8 +274,8 @@
       <PhysicsMaterial>
         <name>Wood (Instance)</name>
         <hideFlags>None</hideFlags>
-        <dynamicFriction>0.66</dynamicFriction>
-        <staticFriction>0.6</staticFriction>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
         <bounciness>0.12</bounciness>
         <bouncyness>0.12</bouncyness>
         <frictionDirection2>
@@ -344,7 +295,56 @@
       </PhysicsMaterial>
       <RendererMaterialName>Wall Material</RendererMaterialName>
       <Layer>0</Layer>
-      <Name>Wall 4</Name>
+      <Name>Wall</Name>
+    </Obstacle>
+    <Obstacle>
+      <Shape>Cube</Shape>
+      <Position>
+        <x>-11.0946341</x>
+        <y>-1</y>
+        <z>2.349922</z>
+      </Position>
+      <Rotation>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+        <w>1</w>
+        <eulerAngles>
+          <x>0</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>30</x>
+        <y>1</y>
+        <z>30</z>
+      </Scale>
+      <PhysicsMaterial>
+        <name>Wood (Instance)</name>
+        <hideFlags>None</hideFlags>
+        <dynamicFriction>0.33</dynamicFriction>
+        <staticFriction>0.3</staticFriction>
+        <bounciness>0.12</bounciness>
+        <bouncyness>0.12</bouncyness>
+        <frictionDirection2>
+          <x>0</x>
+          <y>0</y>
+          <z>0</z>
+        </frictionDirection2>
+        <dynamicFriction2>0</dynamicFriction2>
+        <staticFriction2>0</staticFriction2>
+        <frictionCombine>Average</frictionCombine>
+        <bounceCombine>Average</bounceCombine>
+        <frictionDirection>
+          <x>0</x>
+          <y>0</y>
+          <z>0</z>
+        </frictionDirection>
+      </PhysicsMaterial>
+      <RendererMaterialName>Wall Material</RendererMaterialName>
+      <Layer>0</Layer>
+      <Name>Floor</Name>
     </Obstacle>
   </Obstacles>
   <SpawnPoints>
@@ -567,6 +567,38 @@
       <PlayerID>1</PlayerID>
     </Goal>
   </Goals>
+  <Lights>
+    <Light>
+      <Name>Directional light</Name>
+      <Position>
+        <x>-5</x>
+        <y>10</y>
+        <z>0</z>
+      </Position>
+      <Rotation>
+        <x>0.7071068</x>
+        <y>0</y>
+        <z>0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>90</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <LightType>Directional</LightType>
+      <Range>204.07</Range>
+      <SpotAngle>147</SpotAngle>
+      <Intensity>0.19</Intensity>
+      <BounceIntensity>5.61</BounceIntensity>
+      <Colour>
+        <r>1</r>
+        <g>1</g>
+        <b>0</b>
+        <a>1</a>
+      </Colour>
+    </Light>
+  </Lights>
   <Floor>
     <Position>
       <x>-11.0946341</x>
