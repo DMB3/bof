@@ -10,9 +10,6 @@ namespace Ballz.Behaviours {
     /// </summary>
     public class NetworkManager : MonoBehaviour {
 
-        // magic constant used to multiply impulses to tweak physics behaviour
-        private const float IMPULSE_MULTIPLIER_MAGIC = 2.2f;
-
         private const int MAXIMUM_CONNECTIONS = 2;
         private const int SERVER_PORT = 9999;
 
@@ -288,7 +285,7 @@ namespace Ballz.Behaviours {
         [RPC]
         private void SetBallImpulse(string ballName, Vector3 impulse) {
             BallInput input = this.FindBallInputWithName(ballName);
-            input.AppliedImpulse = impulse * NetworkManager.IMPULSE_MULTIPLIER_MAGIC;
+            input.AppliedImpulse = impulse;
         }
 
         [RPC]

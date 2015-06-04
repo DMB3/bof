@@ -9,7 +9,7 @@ namespace Ballz.Behaviours {
     public class BallInput : MonoBehaviour {
 
         public GameObject Point;
-        public float MaxImpulse = 10f;
+        public float MaxSpeed = 50;
         public int PlayerID;
         public int ScoreValue = 1;
 
@@ -20,10 +20,16 @@ namespace Ballz.Behaviours {
     
         private GameObject arrow = null;
         private Coroutine pointGen = null;
+        internal float MaxImpulse;  // PointBehavior uses this field
 
         internal string Name {
             get;
             set;
+        }
+
+        void Start() {
+            Rigidbody rigidBody = this.GetComponent<Rigidbody>();
+            this.MaxImpulse = rigidBody.mass * this.MaxSpeed;
         }
 
         public void ClearInputArrow() {
