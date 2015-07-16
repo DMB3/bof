@@ -34,7 +34,7 @@ namespace Ballz.Behaviours {
             arena.Goals = new List<Goal>();
             arena.Obstacles = new List<Obstacle>();
             arena.SpawnPoints = new List<SpawnPoint>();
-            arena.Lights = new List<Ballz.Serialization.Light>();
+            arena.Lights = new List<SerializableLight>();
             arena.Name = this.ParentGameObject.name;
             this.AddToArena(this.ParentGameObject.transform, arena);
 
@@ -78,8 +78,8 @@ namespace Ballz.Behaviours {
                     newFloor.Position = childTransform.position;
                     newFloor.Scale = childTransform.localScale;
                     arena.Floor = newFloor;
-                } else if (child.tag.Equals("Light")) {
-                    Ballz.Serialization.Light newLight = new Ballz.Serialization.Light();
+                } else if (child.tag.Equals("SerializableLight")) {
+                    SerializableLight newLight = new SerializableLight();
                     newLight.Name = child.name;
                     newLight.Position = childTransform.position;
                     newLight.Rotation = childTransform.rotation;
@@ -185,7 +185,7 @@ namespace Ballz.Behaviours {
                 spawnObject.GetComponent<SpawnPointBehaviour>().Spawn();
             }
 
-            foreach (Ballz.Serialization.Light light in arena.Lights) {
+            foreach (SerializableLight light in arena.Lights) {
                 GameObject lightObject = new GameObject();
                 lightObject.transform.parent = this.ParentGameObject.transform;
                 UnityEngine.Light gameLight = lightObject.AddComponent<UnityEngine.Light>();

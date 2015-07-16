@@ -9,7 +9,7 @@ namespace Ballz.Serialization {
     /// <summary>
     /// Serializable class that defines a light.
     /// </summary>
-    public class Light {
+    public class SerializableLight {
 
         public string Name {
             get;

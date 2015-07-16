@@ -36,7 +36,7 @@ namespace Ballz.Serialization {
             set;
         }
 
-        public List<Ballz.Serialization.Light> Lights {
+        public List<SerializableLight> Lights {
             get;
             set;
         }
