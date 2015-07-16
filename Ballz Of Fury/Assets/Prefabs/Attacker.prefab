@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 185398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.00788212, y: -.25, z: 10.7016277}
-  m_LocalScale: {x: .5, y: .5, z: .5}
+  m_LocalScale: {x: .068599999, y: .068599999, z: .068599999}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -91,6 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Point: {fileID: 166134, guid: d73d03ee593b5eb4f8fd7b3e03ac6420, type: 2}
   MaxSpeed: 50
+  MaxImpulseRadius: 1
   PlayerID: 0
   ScoreValue: 1
   AppliedImpulse: {x: 0, y: 0, z: 0}

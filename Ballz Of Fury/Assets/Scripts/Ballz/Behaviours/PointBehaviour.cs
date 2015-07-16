@@ -26,7 +26,7 @@ namespace Ballz.Behaviours {
             this.transform.localPosition = new Vector3(0, 0, progress * distance);
 
             // set color according to impulse given
-            var power = this.parent.direction.magnitude / this.parent.MaxImpulse;
+            var power = this.parent.direction.magnitude / this.parent.MaxImpulseRadius;
             this.GetComponent<Renderer>().material.color = this.Gradient.Evaluate(power);
 
             if (progress == 1) {
