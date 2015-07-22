@@ -163,6 +163,12 @@ namespace Ballz.Behaviours {
             this.CloseStandByButton.gameObject.SetActive(true);
         }
 
+        void OnDisconnectedFromServer(NetworkDisconnection info) {
+            this.ShowStandBy();
+            this.StandByText.text = string.Format("Disconnected from server :( {0}", info.ToString());
+            this.CloseStandByButton.gameObject.SetActive(true);
+        }
+
         private void ShowStandBy() {
             this.ArenaParent.SetActive(false);
             this.MainMenuPanel.gameObject.SetActive(false);
