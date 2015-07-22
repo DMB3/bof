@@ -33,6 +33,7 @@ namespace Ballz.Behaviours {
                 Vector3 impulse = input.AppliedImpulse;
                 ball.GetComponent<Rigidbody>().AddForce(impulse, ForceMode.Impulse);
                 input.ClearInputArrow();
+                input.StopSendingImpulseToServer();
             }
             this.GetComponent<AllSleeping>().OnAllSleeping += this.ArenaSleeping;
             this.GetComponent<AllSleeping>().StartCheck();

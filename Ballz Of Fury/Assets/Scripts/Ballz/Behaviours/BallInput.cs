@@ -24,6 +24,7 @@ namespace Ballz.Behaviours {
         private GameObject arrow = null;
         private GameObject circle = null;
         private Coroutine pointGen = null;
+        private Coroutine sendGen = null;
         internal float MaxImpulse;  // PointBehavior uses this field
 
         internal string Name {
@@ -56,6 +57,8 @@ namespace Ballz.Behaviours {
                 this.arrow = new GameObject("arrow");
                 this.arrow.transform.parent = this.transform;
                 this.arrow.transform.localPosition = Vector3.zero;
+            }
+            if (this.circle == null) {
                 this.circle = new GameObject("circle");
                 this.circle.transform.parent = this.arrow.transform;
                 this.circle.transform.localPosition = Vector3.zero;
@@ -65,6 +68,58 @@ namespace Ballz.Behaviours {
                 this.StopCoroutine(this.pointGen);
             }
             this.pointGen = this.StartCoroutine(this.GeneratePoints());
+            if (Network.isClient) {
+                this.sendGen = this.StartCoroutine(this.StartSendingImpulseToServer());
+            }
+        }
+
+        private IEnumerator StartSendingImpulseToServer() {
+            Vector3 lastSent = Vector3.zero;
+            while (true) {
+                if (lastSent != this.AppliedImpulse) {
+                    Debug.Log("sending new impulse to server");
+                    this.SendImpulseToServer();
+                    lastSent = this.AppliedImpulse;
+                }
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        public void StopSendingImpulseToServer() {
+            if (this.sendGen != null) {
+                this.StopCoroutine(this.sendGen);
+                this.sendGen = null;
+            }
+            if (Network.isClient) {
+                Debug.Log("stopped sending impulses to server");
+            } else {
+                Debug.Log("nothing to stop here (not a client)");
+            }
+        }
+
+        public void OnMouseOver() {
+            if (!this.enabled) {
+                // unfortunately, disabled objects still callback on OnMouse* :(
+                return;
+            }
+
+            if (Input.GetMouseButtonDown(1) && this.AppliedImpulse != Vector3.zero) {
+                this.SetImpulse(Vector3.zero);
+                this.ClearInputArrow();
+            }
+        }
+
+        /// <summary>
+        /// Sets the impulse applied to this ball and sends it to the server (if running on a 
+        /// client of course) if sendToServer is true.
+        /// </summary>
+        /// <param name="impulse"></param>
+        /// <param name="sendToServer"></param>
+        private void SetImpulse(Vector3 impulse, bool sendToServer=true) {
+            this.AppliedImpulse = impulse;
+            if (Network.isClient) {
+                this.SendImpulseToServer();
+            }
         }
 
         private void CreateCircle() {
@@ -135,15 +190,13 @@ namespace Ballz.Behaviours {
                 return;
             }
             // destroy the circle showing the maximum impulse (but keep the arrow)
-            //this.ClearCircle();
+            this.ClearCircle();
 
-            // store impulse in ball
-            this.AppliedImpulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
-            // the following operation converts the direction 
-            this.AppliedImpulse *= this.MaxImpulse / this.MaxImpulseRadius;
-            if (Network.isClient) {
-                this.SendImpulseToServer();
-            }
+            // the following operation normalizes the currently stored direction w.r.t. the maximum impulse
+            Vector3 impulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
+            impulse *= this.MaxImpulse / this.MaxImpulseRadius;
+            this.SetImpulse(impulse);
+            this.StopSendingImpulseToServer();
         }
 
         /// <summary>
