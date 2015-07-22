@@ -20,11 +20,12 @@ namespace Ballz.Behaviours {
 
         internal Vector2 direction;
         internal SpawnPointBehaviour spawnPoint;
-    
+
+        private Vector3 lastSentImpulse = Vector3.zero;
+        private float lastSentImpulseTime = 0f;
         private GameObject arrow = null;
         private GameObject circle = null;
         private Coroutine pointGen = null;
-        private Coroutine sendGen = null;
         internal float MaxImpulse;  // PointBehavior uses this field
 
         internal string Name {
@@ -68,33 +69,6 @@ namespace Ballz.Behaviours {
                 this.StopCoroutine(this.pointGen);
             }
             this.pointGen = this.StartCoroutine(this.GeneratePoints());
-            if (Network.isClient) {
-                this.sendGen = this.StartCoroutine(this.StartSendingImpulseToServer());
-            }
-        }
-
-        private IEnumerator StartSendingImpulseToServer() {
-            Vector3 lastSent = Vector3.zero;
-            while (true) {
-                if (lastSent != this.AppliedImpulse) {
-                    Debug.Log("sending new impulse to server");
-                    this.SendImpulseToServer();
-                    lastSent = this.AppliedImpulse;
-                }
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
-
-        public void StopSendingImpulseToServer() {
-            if (this.sendGen != null) {
-                this.StopCoroutine(this.sendGen);
-                this.sendGen = null;
-            }
-            if (Network.isClient) {
-                Debug.Log("stopped sending impulses to server");
-            } else {
-                Debug.Log("nothing to stop here (not a client)");
-            }
         }
 
         public void OnMouseOver() {
@@ -117,7 +91,9 @@ namespace Ballz.Behaviours {
         /// <param name="sendToServer"></param>
         private void SetImpulse(Vector3 impulse, bool sendToServer=true) {
             this.AppliedImpulse = impulse;
-            if (Network.isClient) {
+            float deltaT = Time.time - this.lastSentImpulseTime;
+            float deltaI = (this.AppliedImpulse - this.lastSentImpulse).magnitude;
+            if (sendToServer && Network.isClient && (deltaT > 0.2 || deltaI > 0.01 * this.MaxImpulse)) {
                 this.SendImpulseToServer();
             }
         }
@@ -182,6 +158,11 @@ namespace Ballz.Behaviours {
             if (this.direction.magnitude > this.MaxImpulseRadius) {
                 this.direction *= this.MaxImpulseRadius / this.direction.magnitude;
             }
+
+            // the following operation normalizes the currently stored direction w.r.t. the maximum impulse
+            Vector3 impulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
+            impulse *= this.MaxImpulse / this.MaxImpulseRadius;
+            this.SetImpulse(impulse);
         }
 
         public void OnMouseUp() {
@@ -191,19 +172,16 @@ namespace Ballz.Behaviours {
             }
             // destroy the circle showing the maximum impulse (but keep the arrow)
             this.ClearCircle();
-
-            // the following operation normalizes the currently stored direction w.r.t. the maximum impulse
-            Vector3 impulse = new Vector3(this.direction.x, 0.0f, this.direction.y);
-            impulse *= this.MaxImpulse / this.MaxImpulseRadius;
-            this.SetImpulse(impulse);
-            this.StopSendingImpulseToServer();
         }
 
         /// <summary>
         /// Send this.AppliedImpulse to server along with the ball's ID.
         /// </summary>
         private void SendImpulseToServer() {
+            Debug.Log("sending new impulse to server");
             GameObject.FindObjectOfType<NetworkManager>().GetComponent<NetworkView>().RPC("SetBallImpulse", RPCMode.All, this.Name, this.AppliedImpulse);
+            this.lastSentImpulse = this.AppliedImpulse;
+            this.lastSentImpulseTime = Time.time;
         }
 
         /// <summary>
