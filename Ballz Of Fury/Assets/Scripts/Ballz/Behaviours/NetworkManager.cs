@@ -33,6 +33,7 @@ namespace Ballz.Behaviours {
         public Transform MainMenuPanel;
         public Transform StandByPanel;
         public Transform GameUI;
+        public Transform SandboxUI;
 
         public GameObject ArenaParent;
 
@@ -184,6 +185,22 @@ namespace Ballz.Behaviours {
             this.GameUI.gameObject.SetActive(false);
         }
 
+        public void ClickSandbox() {
+            this.ShowArena();
+            this.ArenaParent.GetComponent<ArenaSerializer>().LoadFromTargetFilePath();
+
+            this.SandboxUI.gameObject.SetActive(true);
+            this.FindBalls();
+        }
+
+        public void CloseSandbox() {
+            foreach (Transform child in this.ArenaParent.transform) {
+                GameObject.Destroy(child.gameObject);
+            }
+            this.SandboxUI.gameObject.SetActive(false);
+            this.ShowMainMenu();
+        }
+
         private void StartGame() {
             // show the arena parent and load a new arena
             this.ShowArena();
@@ -298,6 +315,15 @@ namespace Ballz.Behaviours {
 
             this.simulating = true;
             this.control.ApplyImpulses();
+        }
+
+        public void ApplySandboxImpulses() {
+            foreach (GameObject ball in this.allBalls) {
+                BallInput input = ball.GetComponent<BallInput>();
+                Vector3 impulse = input.AppliedImpulse;
+                ball.GetComponent<Rigidbody>().AddForce(impulse, ForceMode.Impulse);
+                input.ClearInputArrow();
+            }       
         }
 
         /// <summary>
